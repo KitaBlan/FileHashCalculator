@@ -655,22 +655,22 @@ const HashCalculator = {
     
     // MD5辅助函数
     md5FF(a, b, c, d, x, s, t) {
-        a += (b & c) | (~b & d) + x + t;
-        return (a << s) | (a >>> (32 - s)) + b;
+        a += ((b & c) | (~b & d)) + x + t;
+        return ((a << s) | (a >>> (32 - s))) + b;
     },
-    
+
     md5GG(a, b, c, d, x, s, t) {
-        a += (b & d) | (c & ~d) + x + t;
-        return (a << s) | (a >>> (32 - s)) + b;
+        a += ((b & d) | (c & ~d)) + x + t;
+        return ((a << s) | (a >>> (32 - s))) + b;
     },
-    
+
     md5HH(a, b, c, d, x, s, t) {
-        a += b ^ c ^ d + x + t;
-        return (a << s) | (a >>> (32 - s)) + b;
+        a += (b ^ c ^ d) + x + t;
+        return ((a << s) | (a >>> (32 - s))) + b;
     },
-    
+
     md5II(a, b, c, d, x, s, t) {
-        a += c ^ (b | ~d) + x + t;
-        return (a << s) | (a >>> (32 - s)) + b;
+        a += (c ^ (b | ~d)) + x + t;
+        return ((a << s) | (a >>> (32 - s))) + b;
     }
 };
