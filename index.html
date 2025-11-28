@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文件哈希计算器</title>
+    <!-- Tailwind CSS v3 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide 图标库 -->
+    <script src="https://cdn.jsdelivr.net/npm/lucide@0.544.0/dist/umd/lucide.min.js"></script>
+    <!-- 统一的 Tailwind 配置 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FF9F45',
+                        secondary: '#F9E2AE',
+                        accent: '#E76F51',
+                        neutral: '#FFF8F0',
+                        'dark-bg': '#1E1E1E',
+                        'dark-text': '#E0E0E0',
+                        'dark-primary': '#FFB74D'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    }
+                }
+            },
+            darkMode: 'class'
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .glass-effect {
+                @apply bg-white/70 dark:bg-dark-bg/70 backdrop-blur-md;
+            }
+            .warm-gradient {
+                @apply bg-gradient-to-r from-primary/20 to-secondary/20 dark:from-primary/10 dark:to-secondary/5;
+            }
+            .btn-primary {
+                @apply bg-primary hover:bg-primary/90 text-white font-medium py-2 px-4 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg active:scale-95;
+            }
+            .btn-secondary {
+                @apply bg-white dark:bg-dark-bg/80 border border-primary text-primary dark:text-dark-primary hover:bg-primary/10 font-medium py-2 px-4 rounded-lg transition-all duration-300;
+            }
+            .input-primary {
+                @apply border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary dark:bg-dark-bg/50 dark:text-dark-text transition-all;
+            }
+            .card {
+                @apply bg-white dark:bg-dark-bg/80 rounded-xl shadow-md p-6 transition-all duration-300 hover:shadow-lg;
+            }
+            .progress-bar {
+                @apply h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden;
+            }
+            .progress-value {
+                @apply h-full bg-primary rounded-full transition-all duration-300;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-neutral dark:bg-dark-bg text-gray-800 dark:text-dark-text min-h-screen transition-colors duration-300">
+    <!-- 顶部导航栏 -->
+    <header class="sticky top-0 z-50 glass-effect border-b border-gray-200 dark:border-gray-700">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <i data-lucide="hash" class="w-8 h-8 text-primary"></i>
+                <h1 class="text-xl font-bold text-primary">文件哈希计算器</h1>
+            </div>
+            <nav class="hidden md:flex items-center space-x-6">
+                <a href="#" class="nav-link active" data-section="calculator">
+                    <i data-lucide="calculator" class="w-5 h-5 inline-block mr-1"></i>
+                    计算
+                </a>
+                <a href="#" class="nav-link" data-section="comparison">
+                    <i data-lucide="git-compare" class="w-5 h-5 inline-block mr-1"></i>
+                    比较
+                </a>
+                <a href="#" class="nav-link" data-section="help">
+                    <i data-lucide="help-circle" class="w-5 h-5 inline-block mr-1"></i>
+                    帮助
+                </a>
+            </nav>
+            <div class="flex items-center space-x-3">
+                <button id="settings-btn" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+                    <i data-lucide="settings" class="w-6 h-6"></i>
+                </button>
+                <button id="theme-toggle" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+                    <i data-lucide="sun" class="w-6 h-6 block dark:hidden"></i>
+                    <i data-lucide="moon" class="w-6 h-6 hidden dark:block"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主内容区 -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- 计算器部分 -->
+        <section id="calculator-section" class="section active">
+            <!-- 算法选择 -->
+            <div class="card mb-6">
+                <h2 class="text-lg font-semibold mb-4 flex items-center">
+                    <i data-lucide="shield-check" class="w-5 h-5 mr-2 text-primary"></i>
+                    选择哈希算法
+                </h2>
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3" id="algorithm-selector">
+                    <label class="algorithm-option flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                        <input type="checkbox" class="algorithm-checkbox mr-3 h-4 w-4 text-primary focus:ring-primary" value="md5">
+                        <span>MD5</span>
+                    </label>
+                    <label class="algorithm-option flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                        <input type="checkbox" class="algorithm-checkbox mr-3 h-4 w-4 text-primary focus:ring-primary" value="sha1">
+                        <span>SHA-1</span>
+                    </label>
+                    <label class="algorithm-option flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                        <input type="checkbox" class="algorithm-checkbox mr-3 h-4 w-4 text-primary focus:ring-primary" value="sha256">
+                        <span>SHA-256</span>
+                    </label>
+                    <label class="algorithm-option flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                        <input type="checkbox" class="algorithm-checkbox mr-3 h-4 w-4 text-primary focus:ring-primary" value="sha512">
+                        <span>SHA-512</span>
+                    </label>
+                    <label class="algorithm-option flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                        <input type="checkbox" class="algorithm-checkbox mr-3 h-4 w-4 text-primary focus:ring-primary" value="hmac-md5">
+                        <span>HMAC-MD5</span>
+                    </label>
+                    <label class="algorithm-option flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                        <input type="checkbox" class="algorithm-checkbox mr-3 h-4 w-4 text-primary focus:ring-primary" value="hmac-sha1">
+                        <span>HMAC-SHA1</span>
+                    </label>
+                    <label class="algorithm-option flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                        <input type="checkbox" class="algorithm-checkbox mr-3 h-4 w-4 text-primary focus:ring-primary" value="hmac-sha256">
+                        <span>HMAC-SHA256</span>
+                    </label>
+                </div>
+                <div id="hmac-key-container" class="mt-4 hidden">
+                    <label for="hmac-key" class="block text-sm font-medium mb-1">HMAC 密钥</label>
+                    <input type="text" id="hmac-key" class="input-primary w-full" placeholder="输入 HMAC 密钥（可选）">
+                </div>
+            </div>
+
+            <!-- 文件选择和拖拽区域 -->
+            <div class="card mb-6">
+                <h2 class="text-lg font-semibold mb-4 flex items-center">
+                    <i data-lucide="file-upload" class="w-5 h-5 mr-2 text-primary"></i>
+                    选择文件
+                </h2>
+                <div id="drop-area" class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-8 text-center hover:border-primary dark:hover:border-dark-primary transition-colors cursor-pointer">
+                    <i data-lucide="upload-cloud" class="w-16 h-16 mx-auto text-gray-400 dark:text-gray-500 mb-4"></i>
+                    <p class="mb-2 text-lg">拖拽文件到此处或点击选择文件</p>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">支持单个或多个文件，支持大文件计算</p>
+                    <label class="btn-primary inline-flex items-center">
+                        <i data-lucide="folder-open" class="w-4 h-4 mr-2"></i>
+                        选择文件
+                        <input type="file" id="file-input" class="hidden" multiple>
+                    </label>
+                </div>
+                <div id="file-list" class="mt-4 hidden">
+                    <h3 class="font-medium mb-2">已选择的文件：</h3>
+                    <ul id="selected-files" class="space-y-2 max-h-40 overflow-y-auto p-2 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                        <!-- 选中的文件将在这里显示 -->
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 计算按钮和进度 -->
+            <div class="card mb-6">
+                <div class="flex flex-col sm:flex-row justify-between items-center">
+                    <button id="calculate-btn" class="btn-primary flex items-center justify-center mb-4 sm:mb-0 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                        <i data-lucide="play" class="w-4 h-4 mr-2"></i>
+                        开始计算
+                    </button>
+                    <button id="clear-btn" class="btn-secondary flex items-center justify-center">
+                        <i data-lucide="trash-2" class="w-4 h-4 mr-2"></i>
+                        清除
+                    </button>
+                </div>
+                <div id="progress-container" class="mt-6 hidden">
+                    <div class="flex justify-between items-center mb-1">
+                        <span id="progress-file-name" class="text-sm font-medium truncate"></span>
+                        <span id="progress-percentage" class="text-sm font-medium">0%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div id="progress-value" class="progress-value" style="width: 0%"></div>
+                    </div>
+                    <div class="flex justify-between items-center mt-1 text-xs text-gray-500 dark:text-gray-400">
+                        <span id="progress-size">0 MB / 0 MB</span>
+                        <span id="progress-time">剩余时间：计算中...</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 结果显示区域 -->
+            <div id="results-section" class="hidden">
+                <h2 class="text-lg font-semibold mb-4 flex items-center">
+                    <i data-lucide="check-circle" class="w-5 h-5 mr-2 text-primary"></i>
+                    计算结果
+                </h2>
+                <div id="results-container" class="space-y-4">
+                    <!-- 计算结果将在这里显示 -->
+                </div>
+                <div class="mt-6 flex flex-wrap gap-3">
+                    <button id="copy-all-btn" class="btn-secondary flex items-center">
+                        <i data-lucide="copy" class="w-4 h-4 mr-2"></i>
+                        复制所有结果
+                    </button>
+                    <button id="export-btn" class="btn-secondary flex items-center">
+                        <i data-lucide="download" class="w-4 h-4 mr-2"></i>
+                        导出结果
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 比较部分 -->
+        <section id="comparison-section" class="section hidden">
+            <div class="card mb-6">
+                <h2 class="text-lg font-semibold mb-4 flex items-center">
+                    <i data-lucide="git-compare" class="w-5 h-5 mr-2 text-primary"></i>
+                    哈希值比较
+                </h2>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-1">输入哈希值进行比较</label>
+                        <div class="flex space-x-2">
+                            <input type="text" id="compare-hash-input" class="input-primary flex-1" placeholder="输入要比较的哈希值">
+                            <button id="compare-btn" class="btn-primary whitespace-nowrap">
+                                <i data-lucide="search" class="w-4 h-4 inline-block mr-1"></i>
+                                比较
+                            </button>
+                        </div>
+                    </div>
+                    <div id="comparison-result" class="hidden p-4 rounded-lg">
+                        <!-- 比较结果将在这里显示 -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 class="text-lg font-semibold mb-4 flex items-center">
+                    <i data-lucide="files" class="w-5 h-5 mr-2 text-primary"></i>
+                    多文件哈希值比较
+                </h2>
+                <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                    选择多个文件后，系统将自动计算并比较它们的哈希值，显示哪些文件具有相同的内容。
+                </p>
+                <div id="multi-file-comparison-result" class="hidden">
+                    <!-- 多文件比较结果将在这里显示 -->
+                </div>
+            </div>
+        </section>
+
+        <!-- 帮助部分 -->
+        <section id="help-section" class="section hidden">
+            <div class="card mb-6">
+                <h2 class="text-lg font-semibold mb-4 flex items-center">
+                    <i data-lucide="help-circle" class="w-5 h-5 mr-2 text-primary"></i>
+                    使用帮助
+                </h2>
+                <div class="space-y-4">
+                    <div>
+                        <h3 class="font-medium text-primary mb-2">基本使用步骤</h3>
+                        <ol class="list-decimal list-inside space-y-1 text-sm">
+                            <li>在"计算"页面选择您需要的哈希算法</li>
+                            <li>拖拽文件到指定区域或点击"选择文件"按钮</li>
+                            <li>点击"开始计算"按钮</li>
+                            <li>等待计算完成，查看结果</li>
+                            <li>可以复制或导出计算结果</li>
+                        </ol>
+                    </div>
+                    <div>
+                        <h3 class="font-medium text-primary mb-2">哈希算法说明</h3>
+                        <ul class="list-disc list-inside space-y-1 text-sm">
+                            <li><strong>MD5</strong>：生成128位哈希值，常用于文件完整性验证</li>
+                            <li><strong>SHA-1</strong>：生成160位哈希值，安全性高于MD5</li>
+                            <li><strong>SHA-256</strong>：生成256位哈希值，广泛用于安全应用</li>
+                            <li><strong>SHA-512</strong>：生成512位哈希值，提供更高的安全性</li>
+                            <li><strong>HMAC系列</strong>：基于密钥的哈希算法，提供消息认证功能</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="font-medium text-primary mb-2">大文件处理</h3>
+                        <p class="text-sm">
+                            本工具支持大文件和超大文件的哈希计算，通过分块读取和计算的方式处理，
+                            可以在设置中调整分块大小以优化性能。计算过程中会显示实时进度和估计剩余时间。
+                        </p>
+                    </div>
+                    <div>
+                        <h3 class="font-medium text-primary mb-2">哈希值比较</h3>
+                        <p class="text-sm">
+                            在"比较"页面，您可以输入哈希值与已计算的结果进行比较，
+                            也可以通过选择多个文件自动比较它们的哈希值，快速识别相同内容的文件。
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 class="text-lg font-semibold mb-4 flex items-center">
+                    <i data-lucide="info" class="w-5 h-5 mr-2 text-primary"></i>
+                    关于本工具
+                </h2>
+                <p class="text-sm mb-4">
+                    文件哈希计算器是一个轻量级、跨平台的Web应用，用于计算和验证文件的哈希值，
+                    确保文件的完整性和安全性。所有计算均在本地完成，不会将您的文件上传到服务器。
+                </p>
+                <div class="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
+                    <span>版本：1.0.0</span>
+                    <a href="docs/README.md" target="_blank" class="flex items-center hover:text-primary transition-colors">
+                        <i data-lucide="file-text" class="w-4 h-4 mr-1"></i>
+                        完整文档
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 设置弹窗 -->
+    <div id="settings-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+        <div class="card max-w-md w-full mx-4">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-lg font-semibold flex items-center">
+                    <i data-lucide="settings" class="w-5 h-5 mr-2 text-primary"></i>
+                    设置
+                </h2>
+                <button id="close-settings" class="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <div class="space-y-4">
+                <div class="flex items-center justify-between">
+                    <label for="auto-calculate" class="flex items-center cursor-pointer">
+                        <input type="checkbox" id="auto-calculate" class="mr-2 h-4 w-4 text-primary focus:ring-primary">
+                        <span>自动开始计算</span>
+                    </label>
+                </div>
+                <div>
+                    <label for="chunk-size" class="block text-sm font-medium mb-1">分块大小（用于大文件处理）</label>
+                    <select id="chunk-size" class="input-primary w-full">
+                        <option value="65536">64 KB</option>
+                        <option value="262144">256 KB</option>
+                        <option value="524288" selected>512 KB</option>
+                        <option value="1048576">1 MB</option>
+                        <option value="4194304">4 MB</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="result-format" class="block text-sm font-medium mb-1">结果显示格式</label>
+                    <select id="result-format" class="input-primary w-full">
+                        <option value="lowercase" selected>小写</option>
+                        <option value="uppercase">大写</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="export-format" class="block text-sm font-medium mb-1">导出格式</label>
+                    <select id="export-format" class="input-primary w-full">
+                        <option value="txt" selected>文本文件 (.txt)</option>
+                        <option value="csv">CSV 文件 (.csv)</option>
+                    </select>
+                </div>
+            </div>
+            <div class="mt-6 flex justify-end">
+                <button id="save-settings" class="btn-primary">
+                    <i data-lucide="save" class="w-4 h-4 inline-block mr-1"></i>
+                    保存设置
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 导出格式选择弹窗 -->
+    <div id="export-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+        <div class="card max-w-md w-full mx-4">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-lg font-semibold flex items-center">
+                    <i data-lucide="download" class="w-5 h-5 mr-2 text-primary"></i>
+                    导出结果
+                </h2>
+                <button id="close-export" class="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label for="export-filename" class="block text-sm font-medium mb-1">文件名</label>
+                    <input type="text" id="export-filename" class="input-primary w-full" value="hash_results">
+                </div>
+                <div>
+                    <label for="export-format-modal" class="block text-sm font-medium mb-1">导出格式</label>
+                    <select id="export-format-modal" class="input-primary w-full">
+                        <option value="txt">文本文件 (.txt)</option>
+                        <option value="csv">CSV 文件 (.csv)</option>
+                    </select>
+                </div>
+                <div class="flex items-center justify-between">
+                    <label for="include-timestamp" class="flex items-center cursor-pointer">
+                        <input type="checkbox" id="include-timestamp" class="mr-2 h-4 w-4 text-primary focus:ring-primary" checked>
+                        <span>包含时间戳</span>
+                    </label>
+                </div>
+            </div>
+            <div class="mt-6 flex justify-end">
+                <button id="confirm-export" class="btn-primary">
+                    <i data-lucide="download" class="w-4 h-4 inline-block mr-1"></i>
+                    确认导出
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 通知提示 -->
+    <div id="notification" class="fixed bottom-4 right-4 max-w-sm bg-white dark:bg-dark-bg shadow-lg rounded-lg p-4 transform translate-y-full opacity-0 transition-all duration-300 z-50">
+        <div class="flex items-start">
+            <div id="notification-icon" class="mr-3 mt-0.5">
+                <!-- 图标将通过JS动态设置 -->
+            </div>
+            <div class="flex-1">
+                <h4 id="notification-title" class="font-medium"></h4>
+                <p id="notification-message" class="text-sm text-gray-600 dark:text-gray-400 mt-1"></p>
+            </div>
+            <button id="close-notification" class="ml-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
+                <i data-lucide="x" class="w-4 h-4"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- JavaScript 文件 -->
+    <script src="js/utils.js"></script>
+    <script src="js/settings.js"></script>
+    <script src="js/hash-calculator.js"></script>
+    <script src="js/file-handler.js"></script>
+    <script src="js/ui-controller.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
