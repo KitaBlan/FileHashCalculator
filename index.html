@@ -3,11 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>文件哈希计算器</title>
+    <title>文件哈希计算器FileHashCalculator</title>
     <!-- Tailwind CSS v3 -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Lucide 图标库 -->
     <script src="https://cdn.jsdelivr.net/npm/lucide@0.544.0/dist/umd/lucide.min.js"></script>
+<!--    描述代码-->
+    <meta name="description" content="FileHashCalculator是一个简单的文件哈希计算器，支持MD5、SHA-1、SHA-256、SHA-512等哈希算法。一个轻量级、跨平台的Web应用，用于计算和验证文件的哈希值，确保文件完整性和安全性。">
     <!-- 统一的 Tailwind 配置 -->
     <script>
         tailwind.config = {
@@ -188,7 +190,7 @@
                         <span id="progress-percentage" class="text-sm font-medium">0%</span>
                     </div>
                     <div class="progress-bar">
-                        <div id="progress-value" class="progress-value" style="width: 0%"></div>
+                        <div id="progress-value" class="progress-value" style="width: 0"></div>
                     </div>
                     <div class="flex justify-between items-center mt-1 text-xs text-gray-500 dark:text-gray-400">
                         <span id="progress-size">0 MB / 0 MB</span>
