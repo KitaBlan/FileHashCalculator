@@ -197,10 +197,13 @@ const UI = {
         const notification = document.getElementById('notification');
         notification.classList.remove('show');
         notification.classList.add('hide');
-        
+
         // 动画结束后完全隐藏
         setTimeout(() => {
             notification.classList.remove('hide');
+            // 确保通知恢复到初始的不可见状态
+            notification.style.transform = 'translate-y-full';
+            notification.style.opacity = '0';
         }, 300);
     },
     
