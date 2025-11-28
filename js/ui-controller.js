@@ -160,9 +160,21 @@ const UI = {
         notification.className = 'fixed bottom-4 right-4 max-w-sm shadow-lg rounded-lg p-4 transform transition-all duration-300 z-50';
         
         // 添加新样式
-        notification.classList.add(bgColor);
-        iconElement.innerHTML = `<i data-lucide="${iconName}" class="w-5 h-5 ${textColor}"></i>`;
-        
+        // 拆分并添加多个类
+        if (bgColor) {
+            bgColor.split(' ').forEach(cls => {
+                if (cls) notification.classList.add(cls);
+            });
+        }
+
+        // 对于文本颜色也做同样处理
+        let iconHtml = `<i data-lucide="${iconName}" class="w-5 h-5`;
+        textColor.split(' ').forEach(cls => {
+            if (cls) iconHtml += ` ${cls}`;
+        });
+        iconHtml += `"></i>`;
+        iconElement.innerHTML = iconHtml;
+
         // 显示通知
         notification.classList.add('show');
         

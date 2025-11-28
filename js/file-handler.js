@@ -26,16 +26,18 @@ const FileHandler = {
         const fileInput = document.getElementById('file-input');
         const calculateBtn = document.getElementById('calculate-btn');
         const clearBtn = document.getElementById('clear-btn');
-        
+        const fileSelectLabel = dropArea.querySelector('label'); // 获取选择文件按钮
+
         // 拖拽事件
         dropArea.addEventListener('dragover', (e) => this.handleDragOver(e));
         dropArea.addEventListener('dragleave', (e) => this.handleDragLeave(e));
         dropArea.addEventListener('drop', (e) => this.handleDrop(e));
-        
+
         // 点击选择文件
         dropArea.addEventListener('click', () => fileInput.click());
+        fileSelectLabel.addEventListener('click', (e) => e.stopPropagation()); // 阻止事件冒泡
         fileInput.addEventListener('change', (e) => this.handleFileSelect(e));
-        
+
         // 计算和清除按钮
         calculateBtn.addEventListener('click', () => this.startCalculation());
         clearBtn.addEventListener('click', () => this.clearFiles());
