@@ -1,142 +1,97 @@
-# 文件哈希计算器
+# 文件哈希计算器 / File Hash Calculator
 
-一个轻量级、跨平台的Web应用，用于计算和验证文件的哈希值，确保文件完整性和安全性。
+> 纯前端文件哈希计算器 — 20 种算法，零上传，隐私安全
 
-## 功能特点
+[![GitHub](https://img.shields.io/badge/GitHub-KitaBlan%2FFileHashCalculator-FF9F45?logo=github)](https://github.com/KitaBlan/FileHashCalculator)
+![Version](https://img.shields.io/badge/version-4.0.0-FF9F45)
+![License](https://img.shields.io/badge/license-MIT-FF9F45)
 
-### 基础功能
+一个轻量级、跨平台的 Web 应用，用于计算和验证文件的哈希值，确保文件完整性和安全性。所有计算均在浏览器本地完成，**文件不会上传到任何服务器**。
 
-1. **多种哈希算法支持**
-   - MD5
-   - SHA-1
-   - SHA-256
-   - SHA-512
-   - HMAC-MD5
-   - HMAC-SHA1
-   - HMAC-SHA256
+A lightweight, cross-platform web application for computing and verifying file hashes. All computations are performed locally — **files are never uploaded**.
 
-2. **文件处理**
-   - 支持文件拖拽识别
-   - 支持多文件同时计算
-   - 支持大文件和超大文件处理
-   - 支持多种文件类型
+---
 
-3. **哈希值比较**
-   - 支持用户输入哈希值与计算结果比较
-   - 支持多文件间哈希值自动比较
-   - 高亮显示不同部分
+## 功能特点 / Features
 
-4. **结果管理**
-   - 支持复制单个或所有计算结果
-   - 支持导出为TXT或CSV格式
-   - 显示计算时间和文件信息
+### 算法支持 / Supported Algorithms (20+)
 
-### 高级功能
+| 分类 | 算法 |
+|------|------|
+| 标准 (Standard) | SHA-1, SHA-256, SHA-384, SHA-512 |
+| 现代 (Modern) | SHA3-256, SHA3-384, SHA3-512, BLAKE2b-256/512, BLAKE2s-256, BLAKE3, RIPEMD-160 |
+| 传统 (Legacy) | MD5, SM3 (国密), Whirlpool |
+| 快速 (Fast) | CRC32, CRC32C, Adler-32, xxHash64, xxHash3 |
+| HMAC 变体 | 所有加密算法均支持 HMAC 模式 |
 
-1. **大文件优化**
-   - 分块读取和计算，避免内存溢出
-   - 实时显示计算进度和估计剩余时间
-   - 可配置分块大小以优化性能
+### 其他功能
 
-2. **多算法并行**
-   - 支持同时选择和计算多种哈希算法
-   - 一次操作获取多种算法结果
+- **Web Crypto API 原生加速** — SHA 系列使用浏览器原生 API，5-10x 性能提升
+- **智能分块** — 根据文件大小和设备内存自动选择最优分块大小
+- **智能哈希识别** — 粘贴哈希值自动识别算法类型
+- **批量校验** — 支持 .sha256sum / .md5sum / .sfv 格式
+- **中英文界面** — 完整双语支持，一键切换
+- **暗色/亮色/跟随系统主题** — 三种模式，自动适配
+- **键盘快捷键** — Ctrl+K 命令面板、Ctrl+Enter 开始计算
+- **历史记录** — IndexedDB 持久化，支持搜索和清理
+- **文本哈希** — 直接输入文本计算哈希值
+- **交互式教程** — 3 个边学边做教程
+- **响应式设计** — 适配桌面、平板、手机
 
-3. **跨平台响应式设计**
-   - 适配PC、手机、平板等多种终端设备
-   - 支持深色模式和浅色模式
-   - 简洁直观的用户界面
+---
 
-## 使用指南
+## 快速开始 / Quick Start
 
-### 基本使用步骤
+### 直接使用
+打开 `dist/index.html` 即可使用，无需服务器。
+Open `dist/index.html`, no server required.
 
-1. **选择哈希算法**
-   - 在"计算"页面，勾选您需要使用的哈希算法
-   - 如果选择了HMAC系列算法，可选择性输入HMAC密钥
+### 开发 / Development
+```bash
+npm install
+npm run dev
+```
 
-2. **选择文件**
-   - 点击"选择文件"按钮或直接拖拽文件到指定区域
-   - 支持选择多个文件同时计算
+### 构建 / Build
+```bash
+npm run build
+npm run preview
+```
+产物在 `dist/` 目录，纯静态文件，零外部依赖。
 
-3. **开始计算**
-   - 点击"开始计算"按钮
-   - 大文件计算过程中会显示进度条和剩余时间
+---
 
-4. **查看结果**
-   - 计算完成后，结果将显示在页面下方
-   - 可以复制单个哈希值或所有结果
-   - 可以导出结果为TXT或CSV文件
+## 快捷键 / Shortcuts
 
-### 哈希值比较
+| 快捷键 | 功能 |
+|--------|------|
+| `Ctrl+K` | 命令面板 |
+| `Ctrl+O` | 选择文件 |
+| `Ctrl+Enter` | 开始计算 |
+| `Ctrl+E` | 导出结果 |
+| `Ctrl+D` | 暗色模式 |
+| `Escape` | 取消/关闭 |
 
-1. **单哈希值比较**
-   - 切换到"比较"页面
-   - 在输入框中输入要比较的哈希值
-   - 点击"比较"按钮查看是否有匹配的文件
+---
 
-2. **多文件比较**
-   - 在"计算"页面选择多个文件并计算哈希值
-   - 系统会自动分析并显示哪些文件具有相同的内容
-   - 结果会按算法分组显示
+## 技术栈 / Tech Stack
 
-### 设置选项
+- **构建**: Vite 8 + TypeScript
+- **样式**: Tailwind CSS 4 + 自定义 CSS 变量主题
+- **密码学**: noble-hashes + Web Crypto API + 纯 JS 实现
+- **图标**: Lucide (tree-shaking)
+- **存储**: IndexedDB (历史记录) + localStorage (设置)
 
-点击顶部导航栏的设置按钮，可以自定义以下选项：
+---
 
-- **自动开始计算**：选择文件后自动开始计算哈希值
-- **分块大小**：调整大文件处理的分块大小（64KB - 4MB）
-- **结果显示格式**：选择哈希值显示为大写或小写
-- **导出格式**：设置默认导出格式（TXT或CSV）
+## 隐私声明 / Privacy
 
-## 技术说明
+本工具不收集任何用户数据。所有文件计算均在浏览器本地完成，文件不会上传到任何服务器。
 
-### 浏览器兼容性
+This tool does not collect any user data. All file calculations are performed locally in the browser. Files are never uploaded to any server.
 
-本应用使用了现代Web API，建议使用以下浏览器的最新版本：
+---
 
-- Chrome 60+
-- Firefox 60+
-- Safari 12+
-- Edge 79+
+## 许可证 / License
 
-### 安全说明
-
-- 所有计算均在本地完成，不会将您的文件上传到服务器
-- 不会存储您的文件内容或计算结果（除非您明确选择导出）
-- HMAC密钥仅在当前会话中使用，不会被保存
-
-### 大文件处理
-
-对于大文件（超过1GB），建议：
-
-- 选择较大的分块大小（如1MB或4MB）
-- 避免同时选择过多算法
-- 关闭其他占用资源的浏览器标签或应用
-
-## 常见问题
-
-### 为什么计算速度很慢？
-
-- 大文件计算需要更多时间，请耐心等待
-- 同时选择多种算法会增加计算时间
-- 较低配置的设备可能需要更长时间
-
-### 为什么我的文件无法上传？
-
-- 检查浏览器是否支持File API
-- 检查文件是否被其他程序锁定
-- 对于特别大的文件，可能需要更长时间处理
-
-### 为什么哈希值与预期不符？
-
-- 检查是否选择了正确的算法
-- 检查文件是否完整，没有损坏
-- 对于HMAC算法，检查密钥是否正确
-
-### 如何验证下载的文件是否完整？
-
-1. 从官方渠道获取文件的哈希值
-2. 使用本工具计算下载文件的哈希值
-3. 在"比较"页面输入官方哈希值进行比较
-4. 如果显示匹配，则文件完整且未被篡改
+[MIT License](LICENSE) | [GitHub](https://github.com/KitaBlan/FileHashCalculator)

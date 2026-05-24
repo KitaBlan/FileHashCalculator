@@ -1,0 +1,21 @@
+@keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+.skeleton { background: linear-gradient(90deg, var(--bg-tertiary) 25%, var(--border) 50%, var(--bg-tertiary) 75%); background-size: 200% 100%; animation: shimmer 1.5s ease-in-out infinite; border-radius: 8px; }
+@keyframes fadeSlideIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+.animate-fade-slide-in { animation: fadeSlideIn 0.3s ease-out forwards; }
+@keyframes toastSlideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+@keyframes toastSlideOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(100%); opacity: 0; } }
+.toast-enter { animation: toastSlideIn 0.3s ease-out forwards; }
+.toast-exit { animation: toastSlideOut 0.2s ease-in forwards; }
+@keyframes breathe { 0%, 100% { border-color: var(--accent); box-shadow: 0 0 0 0 var(--accent-subtle); } 50% { border-color: var(--accent-hover); box-shadow: 0 0 20px 4px var(--accent-subtle); } }
+.dropzone-active { animation: breathe 1.5s ease-in-out infinite; }
+@keyframes progressPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
+.progress-pulse { animation: progressPulse 2s ease-in-out infinite; }
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+.animate-float { animation: float 3s ease-in-out infinite; }
+@keyframes ripple { 0% { transform: scale(0); opacity: 0.6; } 100% { transform: scale(2.5); opacity: 0; } }
+.animate-ripple { animation: ripple 0.6s ease-out forwards; }
+@media (prefers-reduced-motion: reduce) {
+  .skeleton,.animate-fade-slide-in,.toast-enter,.toast-exit,.dropzone-active,.progress-pulse,.animate-float,.animate-ripple { animation: none !important; }
+  .skeleton { background: var(--bg-tertiary); }
+  .toast-enter,.toast-exit { opacity: 1; transform: none; }
+}

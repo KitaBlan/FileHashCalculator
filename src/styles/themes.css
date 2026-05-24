@@ -1,0 +1,46 @@
+/**
+ * 主题变量 / Theme Variables
+ *
+ * 亮色/暗色独立调色板，非简单反色
+ * Light/dark independent palettes, not simple inversion
+ */
+:root {
+  --bg-primary: oklch(98% 0.01 70);
+  --bg-secondary: oklch(100% 0 0);
+  --bg-tertiary: oklch(96% 0.01 70);
+  --text-primary: oklch(15% 0.01 60);
+  --text-secondary: oklch(50% 0.02 60);
+  --accent: oklch(75% 0.16 55);
+  --accent-hover: oklch(70% 0.16 55);
+  --accent-subtle: oklch(75% 0.16 55 / 0.1);
+  --border: oklch(88% 0.01 70);
+  --shadow: 0 1px 3px oklch(0% 0 0 / 0.08);
+  --glass-bg: oklch(100% 0 0 / 0.7);
+  --success: oklch(68% 0.17 155);
+  --warning: oklch(78% 0.16 85);
+  --error: oklch(63% 0.24 27);
+}
+[data-theme="dark"] {
+  --bg-primary: oklch(15% 0.01 60);
+  --bg-secondary: oklch(18% 0.01 60);
+  --bg-tertiary: oklch(22% 0.01 60);
+  --text-primary: oklch(92% 0.01 70);
+  --text-secondary: oklch(65% 0.02 60);
+  --accent: oklch(80% 0.14 55);
+  --accent-hover: oklch(85% 0.14 55);
+  --accent-subtle: oklch(80% 0.14 55 / 0.12);
+  --border: oklch(30% 0.02 60);
+  --shadow: 0 1px 3px oklch(0% 0 0 / 0.3);
+  --glass-bg: oklch(18% 0.01 60 / 0.7);
+  --success: oklch(75% 0.17 155);
+  --warning: oklch(85% 0.16 85);
+  --error: oklch(70% 0.24 27);
+}
+body,.card,.btn-primary,.btn-secondary,.input-field,.toggle-switch,.nav-link {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  body,.card,.btn-primary,.btn-secondary,.input-field,.toggle-switch,.nav-link {
+    transition: none !important;
+  }
+}
