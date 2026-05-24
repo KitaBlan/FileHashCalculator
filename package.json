@@ -3,7 +3,7 @@
   "private": true,
   "version": "4.0.0",
   "type": "module",
-  "description": "24 种哈希算法，零上传，隐私安全 / 24 hash algorithms, zero upload, privacy-first",
+  "description": "20 种哈希算法，零上传，隐私安全 / 20 hash algorithms, zero upload, privacy-first",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
